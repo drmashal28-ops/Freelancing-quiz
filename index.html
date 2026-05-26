@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Freelancing & SEO Content Writing Quiz</title>
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+    }
+
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg,#0f172a,#1e293b);
+        color:#fff;
+        min-height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:20px;
+    }
+
+    .quiz-container{
+        width:100%;
+        max-width:900px;
+        background:#ffffff;
+        color:#111827;
+        border-radius:18px;
+        padding:25px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .top-bar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        flex-wrap:wrap;
+        gap:10px;
+        margin-bottom:20px;
+    }
+
+    .timer{
+        background:#dc2626;
+        color:white;
+        padding:10px 18px;
+        border-radius:10px;
+        font-weight:bold;
+        font-size:18px;
+    }
+
+    .timer.warning{
+        background:#ea580c;
+        animation: pulse 1s infinite;
+    }
+
+    .timer.danger{
+        background:#dc2626;
+        animation: pulse 0.5s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+
+    .progress{
+        font-size:18px;
+        font-weight:bold;
+        color:#1e3a8a;
+    }
+
+    .countdown-screen{
+        text-align:center;
+        padding:40px;
+    }
+
+    .countdown-screen h1{
+        font-size:48px;
+        color:#0f172a;
+        margin-bottom:20px;
+    }
+
+    .countdown-timer{
+        font-size:72px;
+        font-weight:bold;
+        color:#dc2626;
+        margin:30px 0;
+        font-family: 'Courier New', monospace;
+        animation: countdown-pulse 1s infinite;
+    }
+
+    @keyframes countdown-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .countdown-message{
+        font-size:24px;
+        color:#64748b;
+        margin-bottom:20px;
+    }
+
+    .quiz-started{
+        color:#16a34a;
+        font-size:20px;
+        font-weight:bold;
+    }
+
+    h1{
+        font-size:28px;
+        margin-bottom:20px;
+        color:#0f172a;
+    }
+
+    .question{
+        font-size:24px;
+        font-weight:700;
+        margin-bottom:25px;
+        line-height:1.5;
+    }
+
+    .options{
+        display:flex;
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .option-btn{
+        padding:15px;
+        border:none;
+        border-radius:12px;
+        background:#e2e8f0;
+        cursor:pointer;
+        font-size:17px;
+        text-align:left;
+        transition:0.3s;
+        font-weight:600;
+    }
+
+    .option-btn:hover:not(:disabled){
+        background:#cbd5e1;
+    }
+
+    .option-btn.correct{
+        background:#16a34a !important;
+        color:white;
+    }
+
+    .option-btn.wrong{
+        background:#dc2626 !important;
+        color:white;
+    }
+
+    .option-btn:disabled{
+        cursor:not-allowed;
+        opacity:0.95;
+    }
+
+    .explanation{
+        margin-top:20px;
+        padding:15px;
+        background:#f1f5f9;
+        border-left:5px solid #2563eb;
+        border-radius:8px;
+        display:none;
+        line-height:1.6;
+        font-size:16px;
+    }
+
+    .next-btn{
+        margin-top:25px;
+        padding:14px 24px;
+        border:none;
+        border-radius:12px;
+        background:#2563eb;
+        color:white;
+        font-size:18px;
+        font-weight:bold;
+        cursor:pointer;
+        transition:0.3s;
+    }
+
+    .next-btn:disabled{
+        background:#94a3b8;
+        cursor:not-allowed;
+    }
+
+    .next-btn:hover:not(:disabled){
+        background:#1d4ed8;
+    }
+
+    .result-screen{
+        text-align:center;
+    }
+
+    .result-screen h2{
+        font-size:38px;
+        margin-bottom:20px;
+        color:#0f172a;
+    }
+
+    .score-box{
+        background:#eff6ff;
+        padding:25px;
+        border-radius:15px;
+        margin-top:20px;
+    }
+
+    .score-box p{
+        font-size:24px;
+        margin:15px 0;
+        font-weight:bold;
+    }
+
+    .pass{
+        color:#16a34a;
+    }
+
+    .fail{
+        color:#dc2626;
+    }
+
+    .time-up{
+        text-align:center;
+        padding:40px;
+    }
+
+    .time-up h2{
+        font-size:38px;
+        color:#dc2626;
+        margin-bottom:20px;
+    }
+
+    @media(max-width:768px){
+        .question{
+            font-size:20px;
+        }
+
+        .option-btn{
+            font-size:15px;
+        }
+
+        h1{
+            font-size:22px;
+        }
+
+        .timer,.progress{
+            font-size:16px;
+        }
+
+        .countdown-timer{
+            font-size:48px;
+        }
+
+        .countdown-screen h1{
+            font-size:32px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="quiz-container" id="container">
+    <!-- Content will be dynamically loaded here -->
+</div>
+
+<script>
+
+const quizData = [
+
+{
+q:"What is Escrow in freelancing platforms?",
+options:[
+"A system that stores client payment securely before work starts",
+"A type of freelance tax",
+"A bidding method",
+"A profile ranking tool"
+],
+answer:0,
+explanation:"Escrow protects both freelancer and client by holding payment securely until work approval."
+},
+
+{
+q:"Why do freelancing platforms charge service fees?",
+options:[
+"To pay freelancers extra bonuses",
+"To maintain the platform and provide services",
+"To increase bidding speed",
+"To reduce competition"
+],
+answer:1,
+explanation:"Platforms charge fees to maintain infrastructure, support, and payment systems."
+},
+
+{
+q:"What is the best first step before submitting a proposal?",
+options:[
+"Sending portfolio links",
+"Researching the client's requirements carefully",
+"Reducing your price",
+"Asking for payment"
+],
+answer:1,
+explanation:"Understanding client needs helps you write a highly targeted proposal."
+},
+
+{
+q:"What does scope creep mean?",
+options:[
+"Increasing website traffic",
+"Unexpected project expansion without proper agreement",
+"Improving SEO rankings",
+"Client profile optimization"
+],
+answer:1,
+explanation:"Scope creep happens when extra work is added outside the original agreement."
+},
+
+{
+q:"Which proposal opening is most effective?",
+options:[
+"Dear Sir/Madam",
+"I am the best freelancer",
+"A personalized response addressing the client's exact problem",
+"Please hire me"
+],
+answer:2,
+explanation:"Personalized proposals show understanding and professionalism."
+},
+
+{
+q:"What is the ideal keyword placement in SEO writing?",
+options:[
+"Only in image names",
+"In title, headings, introduction, and naturally throughout content",
+"Only in conclusion",
+"Only in meta description"
+],
+answer:1,
+explanation:"Strategic placement helps search engines understand page relevance."
+},
+
+{
+q:"What are LSI keywords?",
+options:[
+"Paid advertisements",
+"Hidden keywords",
+"Semantically related terms connected to the main keyword",
+"Programming commands"
+],
+answer:2,
+explanation:"LSI keywords improve topical relevance and context."
+},
+
+{
+q:"Why is profile optimization important on freelancing platforms?",
+options:[
+"It improves visibility and trust",
+"It reduces taxes",
+"It removes competition",
+"It guarantees jobs"
+],
+answer:0,
+explanation:"Optimized profiles attract more clients and improve ranking."
+},
+
+{
+q:"What is a milestone payment?",
+options:[
+"A payment made after every message",
+"A staged payment linked to project progress",
+"A yearly platform fee",
+"A type of keyword"
+],
+answer:1,
+explanation:"Milestones divide projects into smaller payment stages."
+},
+
+{
+q:"What should freelancers avoid in proposals?",
+options:[
+"Client-focused solutions",
+"Generic copy-paste content",
+"Relevant portfolio samples",
+"Clear timelines"
+],
+answer:1,
+explanation:"Generic proposals reduce trust and response rates."
+},
+
+{
+q:"What is keyword stuffing?",
+options:[
+"Adding keywords naturally",
+"Overusing keywords unnaturally",
+"Using images",
+"Creating backlinks"
+],
+answer:1,
+explanation:"Keyword stuffing harms readability and SEO rankings."
+},
+
+{
+q:"Which profile element increases credibility most?",
+options:[
+"Professional profile photo",
+"Random quotes",
+"Empty bio",
+"Low pricing only"
+],
+answer:0,
+explanation:"A professional image creates trust and strong first impressions."
+},
+
+{
+q:"What does CTR stand for in SEO?",
+options:[
+"Click Through Rate",
+"Content Tracking Report",
+"Client Text Response",
+"Cost to Rank"
+],
+answer:0,
+explanation:"CTR measures how often users click your search result."
+},
+
+{
+q:"Why should freelancers define project scope clearly?",
+options:[
+"To increase confusion",
+"To avoid misunderstandings and extra unpaid work",
+"To reduce communication",
+"To delay deadlines"
+],
+answer:1,
+explanation:"Clear scope protects both freelancer and client."
+},
+
+{
+q:"What is the purpose of a strong CTA in proposals?",
+options:[
+"To confuse the client",
+"To encourage the client to take action",
+"To increase word count",
+"To avoid communication"
+],
+answer:1,
+explanation:"A CTA motivates clients to reply or schedule discussions."
+},
+
+{
+q:"Which SEO element appears in search engine results as clickable text?",
+options:[
+"Meta title",
+"Footer",
+"Sidebar",
+"Image ALT text"
+],
+answer:0,
+explanation:"The meta title is the main clickable headline in SERPs."
+},
+
+{
+q:"What is the safest payment approach for large projects?",
+options:[
+"Full work before payment",
+"Milestone payments",
+"Cash only",
+"Free sample completion"
+],
+answer:1,
+explanation:"Milestones reduce payment risk in large projects."
+},
+
+{
+q:"What type of tone works best in proposals?",
+options:[
+"Professional and client-focused",
+"Aggressive",
+"Overconfident",
+"Very casual"
+],
+answer:0,
+explanation:"Professional communication increases client trust."
+},
+
+{
+q:"What is the role of meta descriptions?",
+options:[
+"To increase hosting speed",
+"To summarize content for search users",
+"To create backlinks",
+"To manage payments"
+],
+answer:1,
+explanation:"Meta descriptions improve CTR by summarizing page content."
+},
+
+{
+q:"What should freelancers do before accepting a project?",
+options:[
+"Clarify deliverables and deadlines",
+"Immediately start work",
+"Ignore requirements",
+"Request tips"
+],
+answer:0,
+explanation:"Clear expectations prevent disputes later."
+},
+
+{
+q:"Why are testimonials valuable on freelance profiles?",
+options:[
+"They improve trust and social proof",
+"They reduce SEO rankings",
+"They replace portfolios",
+"They remove fees"
+],
+answer:0,
+explanation:"Testimonials show real client satisfaction."
+},
+
+{
+q:"What is a primary keyword?",
+options:[
+"The main target search term",
+"A hidden code",
+"A payment method",
+"A design format"
+],
+answer:0,
+explanation:"Primary keywords define the core topic of the content."
+},
+
+{
+q:"What is the best proposal length?",
+options:[
+"Short but detailed enough to solve the client's problem",
+"20 pages long",
+"One generic sentence",
+"Only pricing"
+],
+answer:0,
+explanation:"Clients prefer concise proposals with clear value."
+},
+
+{
+q:"What does bounce rate indicate?",
+options:[
+"How quickly users leave a webpage",
+"How much money was earned",
+"Number of proposals sent",
+"Website loading speed"
+],
+answer:0,
+explanation:"A high bounce rate can signal poor engagement."
+},
+
+{
+q:"What should freelancers include in portfolios?",
+options:[
+"Relevant work samples",
+"Unrelated screenshots",
+"Random memes",
+"Only certificates"
+],
+answer:0,
+explanation:"Relevant samples demonstrate capability."
+},
+
+{
+q:"What is SEO primarily used for?",
+options:[
+"Improving visibility in search engines",
+"Video editing",
+"Graphic design",
+"Payment processing"
+],
+answer:0,
+explanation:"SEO helps content rank higher in search results."
+},
+
+{
+q:"Why is understanding client pain points important?",
+options:[
+"It helps write targeted solutions",
+"It increases confusion",
+"It reduces communication",
+"It avoids personalization"
+],
+answer:0,
+explanation:"Addressing pain points increases proposal effectiveness."
+},
+
+{
+q:"What is a niche in freelancing?",
+options:[
+"A specialized area of expertise",
+"A payment gateway",
+"A keyword type",
+"A website template"
+],
+answer:0,
+explanation:"Specialization helps freelancers stand out."
+},
+
+{
+q:"What is plagiarism in content writing?",
+options:[
+"Copying content without permission or credit",
+"Using SEO tools",
+"Adding keywords",
+"Writing outlines"
+],
+answer:0,
+explanation:"Plagiarism damages credibility and can cause penalties."
+},
+
+{
+q:"Why are headings important in SEO content?",
+options:[
+"They improve readability and structure",
+"They reduce rankings",
+"They hide keywords",
+"They slow websites"
+],
+answer:0,
+explanation:"Headings help users and search engines scan content."
+},
+
+{
+q:"What is the best pricing strategy for beginners?",
+options:[
+"Competitive but sustainable pricing",
+"Working for free forever",
+"Charging maximum rates immediately",
+"Random pricing"
+],
+answer:0,
+explanation:"Balanced pricing attracts clients while valuing skills."
+},
+
+{
+q:"What is the role of ALT text in SEO?",
+options:[
+"Describing images for accessibility and search engines",
+"Increasing hosting storage",
+"Creating backlinks",
+"Reducing traffic"
+],
+answer:0,
+explanation:"ALT text helps image indexing and accessibility."
+},
+
+{
+q:"Why should freelancers avoid overpromising?",
+options:[
+"It creates unrealistic expectations",
+"It improves SEO",
+"It lowers competition",
+"It reduces proposals"
+],
+answer:0,
+explanation:"Overpromising can damage trust and ratings."
+},
+
+{
+q:"What is client retention?",
+options:[
+"Keeping clients returning for future work",
+"Rejecting projects",
+"Increasing website speed",
+"Deleting proposals"
+],
+answer:0,
+explanation:"Long-term clients create stable freelance income."
+},
+
+{
+q:"What is the best use of keywords?",
+options:[
+"Natural integration into useful content",
+"Repeating them every sentence",
+"Hiding them in white text",
+"Using unrelated keywords"
+],
+answer:0,
+explanation:"Natural keyword use improves readability and SEO."
+},
+
+{
+q:"Why is communication important in freelancing?",
+options:[
+"It builds trust and prevents misunderstandings",
+"It reduces income",
+"It replaces contracts",
+"It guarantees rankings"
+],
+answer:0,
+explanation:"Clear communication strengthens professional relationships."
+},
+
+{
+q:"What is a call-to-action in SEO writing?",
+options:[
+"A statement encouraging user action",
+"A coding language",
+"A payment method",
+"A backlink tool"
+],
+answer:0,
+explanation:"CTAs guide readers toward conversions or engagement."
+},
+
+{
+q:"What should freelancers do if scope changes?",
+options:[
+"Discuss and renegotiate terms professionally",
+"Ignore the changes",
+"Work for free",
+"End communication"
+],
+answer:0,
+explanation:"Scope changes should be documented and priced properly."
+},
+
+{
+q:"What makes content SEO-friendly?",
+options:[
+"Useful, optimized, and readable structure",
+"Random keyword repetition",
+"Very short sentences only",
+"Hidden text"
+],
+answer:0,
+explanation:"Quality and optimization together improve rankings."
+},
+
+{
+q:"Why are deadlines important in freelancing?",
+options:[
+"They maintain professionalism and trust",
+"They reduce quality automatically",
+"They avoid communication",
+"They increase platform fees"
+],
+answer:0,
+explanation:"Meeting deadlines builds reputation and reliability."
+},
+
+{
+q:"What is the purpose of internal linking?",
+options:[
+"Connecting pages within the same website",
+"Sending payments",
+"Improving graphics",
+"Reducing keywords"
+],
+answer:0,
+explanation:"Internal links improve navigation and SEO structure."
+},
+
+{
+q:"What should freelancers do after project completion?",
+options:[
+"Request feedback professionally",
+"Delete communication",
+"Ignore the client",
+"Change profile name"
+],
+answer:0,
+explanation:"Positive reviews improve future opportunities."
+},
+
+{
+q:"What is readability in content writing?",
+options:[
+"How easy content is to understand",
+"Website coding speed",
+"Payment security",
+"Graphic quality"
+],
+answer:0,
+explanation:"Readable content improves engagement and SEO."
+},
+
+{
+q:"What is the ideal proposal focus?",
+options:[
+"Client benefits and solutions",
+"Freelancer personal problems",
+"Long biographies",
+"Complaints"
+],
+answer:0,
+explanation:"Clients care most about solutions to their problems."
+},
+
+{
+q:"What is organic traffic?",
+options:[
+"Visitors coming from unpaid search results",
+"Paid advertisements only",
+"Email subscribers",
+"Social media followers"
+],
+answer:0,
+explanation:"Organic traffic comes naturally from search engines."
+},
+
+{
+q:"Why is consistency important in freelancing?",
+options:[
+"It builds reputation over time",
+"It lowers ratings",
+"It removes clients",
+"It avoids deadlines"
+],
+answer:0,
+explanation:"Consistent quality leads to repeat work and trust."
+},
+
+{
+q:"What is keyword intent?",
+options:[
+"The purpose behind a search query",
+"A platform fee",
+"A contract clause",
+"A proposal template"
+],
+answer:0,
+explanation:"Understanding intent helps create relevant content."
+},
+
+{
+q:"What should freelancers avoid during communication?",
+options:[
+"Unclear and delayed responses",
+"Professional updates",
+"Clarifying requirements",
+"Respectful tone"
+],
+answer:0,
+explanation:"Poor communication damages client relationships."
+},
+
+{
+q:"Why are revisions important in content writing?",
+options:[
+"They improve quality and accuracy",
+"They reduce professionalism",
+"They replace SEO",
+"They increase plagiarism"
+],
+answer:0,
+explanation:"Editing improves clarity, grammar, and effectiveness."
+},
+
+{
+q:"What is the best way to increase freelance success?",
+options:[
+"Continuous skill improvement and professionalism",
+"Copying competitors",
+"Ignoring clients",
+"Working without contracts"
+],
+answer:0,
+explanation:"Growth and professionalism create long-term success."
+},
+
+{
+q:"What is the main goal of SEO content writing?",
+options:[
+"Creating content that ranks and helps readers",
+"Only adding keywords",
+"Making content longer",
+"Reducing readability"
+],
+answer:0,
+explanation:"SEO content must satisfy both users and search engines."
+}
+
+];
+
+let currentQuestion = 0;
+let score = 0;
+let timeLeft = 45 * 60; // 45 minutes
+let quizStarted = false;
+let quizEnded = false;
+
+const container = document.getElementById("container");
+
+function getTimeUntilStart() {
+    const now = new Date();
+    const today = new Date();
+    
+    // Set target time to 9:30 PM (21:30)
+    today.setHours(21, 30, 0, 0);
+    
+    // If 9:30 PM has already passed today, target tomorrow's 9:30 PM
+    if (now > today) {
+        today.setDate(today.getDate() + 1);
+    }
+    
+    const timeUntilStart = today - now;
+    return timeUntilStart;
+}
+
+function formatCountdown(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function showCountdown() {
+    const timeUntilStart = getTimeUntilStart();
+    
+    if (timeUntilStart <= 0) {
+        quizStarted = true;
+        startQuiz();
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="countdown-screen">
+            <h1>🎯 Quiz Starts Soon</h1>
+            <p class="countdown-message">Quiz will begin at <strong>9:30 PM</strong></p>
+            <div class="countdown-timer" id="countdownTimer">${formatCountdown(timeUntilStart)}</div>
+            <p style="font-size:18px; color:#64748b;">Get ready to test your knowledge!</p>
+        </div>
+    `;
+    
+    const countdownInterval = setInterval(() => {
+        const updatedTime = getTimeUntilStart();
+        const timerEl = document.getElementById("countdownTimer");
+        
+        if (timerEl) {
+            timerEl.textContent = formatCountdown(updatedTime);
+        }
+        
+        if (updatedTime <= 0) {
+            clearInterval(countdownInterval);
+            quizStarted = true;
+            startQuiz();
+        }
+    }, 1000);
+}
+
+function startQuiz() {
+    loadQuizScreen();
+    startTimer();
+}
+
+function startTimer(){
+    const timerEl = document.getElementById("timer");
+    
+    const timer = setInterval(() => {
+
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        if(timerEl) {
+            timerEl.textContent = `${minutes}:${seconds}`;
+            
+            // Add warning classes based on time left
+            if(timeLeft <= 60) {
+                timerEl.classList.remove('warning');
+                timerEl.classList.add('danger');
+            } else if(timeLeft <= 300) {
+                timerEl.classList.remove('danger');
+                timerEl.classList.add('warning');
+            }
+        }
+
+        if(timeLeft <= 0){
+            clearInterval(timer);
+            quizEnded = true;
+            showTimeUp();
+        }
+
+        timeLeft--;
+
+    },1000);
+}
+
+function loadQuizScreen() {
+    const current = quizData[currentQuestion];
+
+    container.innerHTML = `
+        <div>
+            <div class="top-bar">
+                <div class="progress" id="progress">Question ${currentQuestion + 1} / ${quizData.length}</div>
+                <div class="timer" id="timer">45:00</div>
+            </div>
+
+            <div id="quiz-screen">
+                <h1>Freelancing & SEO Content Writing Quiz</h1>
+
+                <div class="question" id="question"></div>
+
+                <div class="options" id="options"></div>
+
+                <div class="explanation" id="explanation"></div>
+
+                <button class="next-btn" id="nextBtn" disabled>Next Question</button>
+            </div>
+        </div>
+    `;
+
+    displayQuestion();
+    setupNextButton();
+}
+
+function displayQuestion() {
+    const current = quizData[currentQuestion];
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const explanationEl = document.getElementById("explanation");
+    const nextBtn = document.getElementById("nextBtn");
+
+    questionEl.textContent = current.q;
+
+    optionsEl.innerHTML = "";
+
+    explanationEl.style.display = "none";
+    explanationEl.textContent = "";
+
+    nextBtn.disabled = true;
+
+    current.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.classList.add("option-btn");
+        button.textContent = option;
+
+        button.addEventListener("click", () => selectAnswer(button, index));
+
+        optionsEl.appendChild(button);
+    });
+}
+
+function selectAnswer(button, index) {
+    const current = quizData[currentQuestion];
+    const buttons = document.querySelectorAll(".option-btn");
+    const explanationEl = document.getElementById("explanation");
+    const nextBtn = document.getElementById("nextBtn");
+
+    buttons.forEach(btn => {
+        btn.disabled = true;
+    });
+
+    if(index === current.answer){
+        button.classList.add("correct");
+        score++;
+    }else{
+        button.classList.add("wrong");
+        buttons[current.answer].classList.add("correct");
+    }
+
+    explanationEl.style.display = "block";
+    explanationEl.textContent = current.explanation;
+
+    nextBtn.disabled = false;
+}
+
+function setupNextButton() {
+    const nextBtn = document.getElementById("nextBtn");
+    
+    nextBtn.addEventListener("click", () => {
+        currentQuestion++;
+
+        if(currentQuestion < quizData.length){
+            displayQuestion();
+        }else{
+            quizEnded = true;
+            showResults();
+        }
+    });
+}
+
+function showResults() {
+    const percentage = Math.round((score / quizData.length) * 100);
+    const pass = percentage >= 60;
+
+    container.innerHTML = `
+        <div class="result-screen">
+            <h2>Quiz Completed ✅</h2>
+
+            <div class="score-box">
+                <p>Total Score: ${score} / ${quizData.length}</p>
+                <p>Percentage: ${percentage}%</p>
+                <p class="${pass ? 'pass' : 'fail'}">
+                    ${pass ? '🎉 PASS - Excellent Work!' : '📚 FAIL - Please Revise and Try Again'}
+                </p>
+            </div>
+        </div>
+    `;
+}
+
+function showTimeUp() {
+    const percentage = Math.round((score / quizData.length) * 100);
+    const pass = percentage >= 60;
+
+    container.innerHTML = `
+        <div class="time-up">
+            <h2>⏰ Time's Up!</h2>
+            <p style="font-size:20px; color:#64748b; margin:20px 0;">Quiz has ended</p>
+
+            <div class="score-box">
+                <p>Final Score: ${score} / ${quizData.length}</p>
+                <p>Percentage: ${percentage}%</p>
+                <p class="${pass ? 'pass' : 'fail'}">
+                    ${pass ? '🎉 PASS - Great Job!' : '📚 FAIL - Please Revise and Try Again'}
+                </p>
+            </div>
+        </div>
+    `;
+}
+
+// Initialize the countdown
+showCountdown();
+
+</script>
+
+</body>
+</html>
